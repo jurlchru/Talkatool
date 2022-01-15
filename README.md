@@ -2,6 +2,10 @@
 
 Talkatool is a simple Discord bot that automatically replies to server members.
 
+# Requirements
+
+Node.js 16.6.0 or newer
+
 # Setup
 
 Clone this repository and run

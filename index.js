@@ -182,7 +182,12 @@ client.on('messageCreate', async (message) => {
       order: seq.random(),
     });
     if (reply) {
-      await message.channel.send(reply.content);
+      await message.channel.send({
+        content: reply.content,
+        allowedMentions: {
+          parse: [],
+        },
+      });
     }
   }
 });

@@ -10,7 +10,9 @@ Node.js 16.6.0 or newer
 
 Clone this repository and run
 
-```npm i```
+```
+npm i
+```
 
 Create a `config.json` in the `app` folder using the included `default-config.json` and edit the values as needed.
 

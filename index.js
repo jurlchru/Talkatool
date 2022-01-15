@@ -5,6 +5,9 @@ const config = require('./app/config.json');
 const Reply = require('./db/models/Reply');
 const ReplyChannel = require('./db/models/ReplyChannel');
 
+const previewLength = 80;
+const maxReplies = 24;
+
 const client = new Discord.Client({
   intents: ['GUILDS', 'GUILD_MESSAGES'],
 });
@@ -17,7 +20,34 @@ client.on('messageCreate', async (message) => {
     const args = message.content.slice(config.prefix.length).split(/ /).slice(1).join(' ').trim();
 
     // commands
-    if (command.toLowerCase() === 'setup') {
+    if (command.toLowerCase() === 'help') {
+      const embed = new Discord.MessageEmbed().setColor('RANDOM').setTitle('Available Commands').setFooter({
+        text: 'Commands can only be used by administrators.',
+      });
+
+      embed.addFields([
+        {
+          name: 'setup',
+          value: 'Sets up the channel the command was used in for automatic replies.',
+        },
+        {
+          name: 'unset',
+          value: 'Removes the channel the command was used in from automatic replies.',
+        },
+        {
+          name: 'get <ID>',
+          value: 'Gets information about the reply with the given ID.',
+        },
+        {
+          name: 'delete <ID>',
+          value: 'Deletes the reply with the given ID.',
+        },
+        {
+          name: 'search <text>',
+          value: `Searches for replies that contain the given text.`,
+        },
+      ]);
+    } else if (command.toLowerCase() === 'setup') {
       try {
         const replyChannel = await ReplyChannel.create({
           channel_id: message.channel.id,
@@ -65,43 +95,6 @@ client.on('messageCreate', async (message) => {
           parse: [],
         },
       });
-    } else if (command.toLowerCase() === 'search') {
-      const replies = await Reply.findAll({
-        where: {
-          content: { [Op.substring]: args },
-        },
-      });
-      if (!replies.length) {
-        await message.reply('No replies found.');
-        return;
-      }
-
-      const embed = new Discord.MessageEmbed()
-        .setColor('RANDOM')
-        .setTitle(`Search Results for "${args}"`)
-        .setFooter({
-          text: `Total Results: ${replies.length}`,
-        });
-
-      const previewLength = 80;
-      const maxReplies = 24;
-      let i = 0;
-      while (i < maxReplies && i < replies.length) {
-        const reply = replies[i];
-        const preview =
-          reply.content.length > previewLength ? reply.content.substring(0, previewLength) + '...' : reply.content;
-        embed.addField(`Reply ID: ${reply.id}`, preview, true);
-        i++;
-      }
-
-      if (replies.length > maxReplies) {
-        const omitted = replies.length - maxReplies;
-        embed.addField('...', `${omitted} ${omitted === 1 ? 'reply' : 'replies'} omitted.`);
-      }
-
-      await message.reply({
-        embeds: [embed],
-      });
     } else if (command.toLowerCase() === 'delete') {
       const reply = await Reply.findOne({
         where: {
@@ -120,6 +113,41 @@ client.on('messageCreate', async (message) => {
       } catch (e) {
         await message.reply(`Error deleting reply.\nError: \`${e.message}\``);
       }
+    } else if (command.toLowerCase() === 'search') {
+      const replies = await Reply.findAll({
+        where: {
+          content: { [Op.substring]: args },
+        },
+      });
+      if (!replies.length) {
+        await message.reply('No replies found.');
+        return;
+      }
+
+      const embed = new Discord.MessageEmbed()
+        .setColor('RANDOM')
+        .setTitle(`Search Results for "${args}"`)
+        .setFooter({
+          text: `Total Results: ${replies.length}`,
+        });
+
+      let i = 0;
+      while (i < maxReplies && i < replies.length) {
+        const reply = replies[i];
+        const preview =
+          reply.content.length > previewLength ? reply.content.substring(0, previewLength) + '...' : reply.content;
+        embed.addField(`Reply ID: ${reply.id}`, preview, true);
+        i++;
+      }
+
+      if (replies.length > maxReplies) {
+        const omitted = replies.length - maxReplies;
+        embed.addField('...', `${omitted} ${omitted === 1 ? 'reply' : 'replies'} omitted.`);
+      }
+
+      await message.reply({
+        embeds: [embed],
+      });
     }
   }
   // replies

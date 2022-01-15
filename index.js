@@ -49,7 +49,7 @@ client.on('messageCreate', async (message) => {
         },
       ]);
 
-      await message.channel.send({
+      await message.reply({
         embeds: [embed],
       });
     } else if (command.toLowerCase() === 'setup') {

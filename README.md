@@ -1,15 +1,23 @@
 # Talkatool
 
+Talkatool is a simple Discord bot that automatically replies to server members.
+
 # Setup
 
-clone this repository and run
+Clone this repository and run
 
-`npm i`
+```npm i```
 
-start the bot by either running 
+Create a `config.json` in the `app` folder using the included `default-config.json` and edit the values as needed.
 
-`node .`
+Start the bot by either running
+
+```
+node .
+```
 
 or 
 
-`npm run start`
+```
+npm run start
+```

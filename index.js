@@ -44,6 +44,10 @@ client.on('messageCreate', async (message) => {
           value: 'Deletes the reply with the given ID.',
         },
         {
+          name: 'replies',
+          value: `Shows the amount of replies available for this server.`,
+        },
+        {
           name: 'search <text>',
           value: `Searches for replies that contain the given text.`,
         },
@@ -118,7 +122,17 @@ client.on('messageCreate', async (message) => {
       } catch (e) {
         await message.reply(`Error deleting reply.\nError: \`${e.message}\``);
       }
+    } else if (command.toLowerCase() === 'replies') {
+      const count = await Reply.count({
+        where: { guild_id: message.guild.id },
+      });
+
+      await message.reply(`**${count}** ${count === 1 ? 'reply has' : 'replies have'} been saved for this server.`);
     } else if (command.toLowerCase() === 'search') {
+      if (args === '') {
+        await message.reply('No search string provided.');
+        return;
+      }
       const replies = await Reply.findAll({
         where: {
           content: { [Op.substring]: args },

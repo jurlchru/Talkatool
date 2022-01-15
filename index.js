@@ -47,6 +47,10 @@ client.on('messageCreate', async (message) => {
           value: `Searches for replies that contain the given text.`,
         },
       ]);
+
+      await message.channel.send({
+        embeds: [embed],
+      });
     } else if (command.toLowerCase() === 'setup') {
       try {
         const replyChannel = await ReplyChannel.create({

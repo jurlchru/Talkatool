@@ -83,14 +83,14 @@ client.on('messageCreate', async (message) => {
           text: `Total Results: ${replies.length}`,
         });
 
-      const previewLength = 100;
-      const maxReplies = 10;
+      const previewLength = 80;
+      const maxReplies = 24;
       let i = 0;
       while (i < maxReplies && i < replies.length) {
         const reply = replies[i];
         const preview =
           reply.content.length > previewLength ? reply.content.substring(0, previewLength) + '...' : reply.content;
-        embed.addField(`Reply ID: ${reply.id}`, preview);
+        embed.addField(`Reply ID: ${reply.id}`, preview, true);
         i++;
       }
 

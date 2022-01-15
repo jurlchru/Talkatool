@@ -16,6 +16,7 @@ client.on('messageCreate', async (message) => {
   if (message.author.bot) return;
 
   if (message.content.startsWith(config.prefix)) {
+    if (!message.member.permissions.has('ADMINISTRATOR')) return;
     const command = message.content.slice(config.prefix.length).split(/ /)[0].trim();
     const args = message.content.slice(config.prefix.length).split(/ /).slice(1).join(' ').trim();
 

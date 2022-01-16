@@ -49,8 +49,8 @@ client.on('messageCreate', async (message) => {
           value: 'Deletes the reply with the given ID.',
         },
         {
-          name: 'replies',
-          value: `Shows the amount of replies available for this server.`,
+          name: 'replies <page>',
+          value: `Lists all available replies on this server.`,
         },
         {
           name: 'search <text>',

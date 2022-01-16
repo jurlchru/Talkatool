@@ -6,6 +6,7 @@ const seq = new Sequelize({
   username: 'bot',
   password: 'bot',
   host: './talkatool.db',
+  logging: false,
 });
 
 module.exports = seq;

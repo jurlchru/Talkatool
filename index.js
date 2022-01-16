@@ -23,6 +23,8 @@ client.on('messageCreate', async (message) => {
     const command = message.content.slice(config.prefix.length).split(/ /)[0].trim();
     const args = message.content.slice(config.prefix.length).split(/ /).slice(1).join(' ').trim();
 
+    console.log(`Executing command: ${command} ${args}`);
+
     // commands
     if (command.toLowerCase() === 'help') {
       const embed = new Discord.MessageEmbed().setColor('RANDOM').setTitle('Available Commands').setFooter({
@@ -174,6 +176,8 @@ client.on('messageCreate', async (message) => {
       await message.reply({
         embeds: [embed],
       });
+    } else {
+      console.log(`Command ${command} does not exist.`);
     }
   }
   // replies

@@ -190,7 +190,7 @@ client.on('messageCreate', async (message) => {
 
     await Reply.create(
       {
-        content: message.content,
+        content: Reply.prepareContent(message),
         guild_id: message.guild.id,
         user_id: message.author.id,
       },

@@ -5,6 +5,9 @@ const config = require('./app/config.json');
 const Reply = require('./db/models/Reply');
 const ReplyChannel = require('./db/models/ReplyChannel');
 
+if (config.prefix.length === 0) throw new Error('No prefix set.');
+if (config.token.length === 0) throw new Error('No token set.');
+
 const previewLength = 80;
 const maxReplies = 24;
 
@@ -52,6 +55,10 @@ client.on('messageCreate', async (message) => {
           value: `Searches for replies that contain the given text.`,
         },
       ]);
+
+      for (const field of embed.fields) {
+        field.name = config.prefix + field.name;
+      }
 
       await message.reply({
         embeds: [embed],

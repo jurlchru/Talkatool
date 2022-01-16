@@ -136,7 +136,32 @@ client.on('messageCreate', async (message) => {
         where: { guild_id: message.guild.id },
       });
 
-      await message.reply(`**${count}** ${count === 1 ? 'reply has' : 'replies have'} been saved for this server.`);
+      let page = parseInt(args, 10) || 1;
+      const maxPages = Math.ceil(count / 24);
+      if (page > maxPages) {
+        page = 1;
+      }
+
+      const replies = await Reply.findAll({
+        where: { guild_id: message.guild.id },
+        offset: (page - 1) * 24,
+        limit: 24,
+      });
+
+      const embed = new Discord.MessageEmbed()
+        .setColor('RANDOM')
+        .setTitle(`Replies in ${message.guild.name} | Page ${page}/${maxPages}`)
+        .setFooter({ text: `Total Replies: ${count}` });
+
+      for (const reply of replies) {
+        const preview =
+          reply.content.length > previewLength ? reply.content.substring(0, previewLength) + '...' : reply.content;
+        embed.addField(`Reply ID: ${reply.id}`, preview, true);
+      }
+
+      await message.reply({
+        embeds: [embed],
+      });
     } else if (command.toLowerCase() === 'search') {
       if (args === '') {
         await message.reply('No search string provided.');
